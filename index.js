@@ -2,9 +2,18 @@ const express = require("express")
 const jwt = require("jsonwebtoken")
 const JWT_SECRET = "iloveyou"
 const app = express()
-const PORT = 3001;
+const PORT = 3006;
 
-let users =[]
+let users =[{
+    username:"TEST",
+    password:"test123",
+    todos:[
+        {
+            id:1,
+            todo:"Gym"
+        }
+    ]
+}]
 
 
 app.use(express.json())
@@ -14,7 +23,7 @@ app.post("/signup",(req,res)=>{
         const password = req.body.password;
     
     
-        users = [...users,{username,password}];
+        users = [...users,{username,password,todos:[]}];
 
         res.json({message:"Successfully added user"})
     }
@@ -22,6 +31,7 @@ app.post("/signup",(req,res)=>{
         res.json({message:"Failed to add user", error:err})
     }
 
+    console.log(users)
 })
 
 app.post("/signin",(req,res)=>{
@@ -45,6 +55,25 @@ app.post("/signin",(req,res)=>{
 })
 
 
+app.get("/todos",(req,res)=>{
+    try{
+        const token = req.headers.token;
+
+        const decodedUsername = jwt.verify(token,JWT_SECRET)
+
+        let foundUser = null;
+
+        foundUser = users.find(user => user.username === decodedUsername.username)
+
+        if(foundUser){
+            res.json({username:foundUser.username ,todos:foundUser.todos})
+        }else{
+            res.json({message:"Codunt find user"})
+        }
+    }catch(err){
+        res.json({error:err})
+    }
+})
 
 app.listen(PORT , ()=>{
     console.log("App is running")
