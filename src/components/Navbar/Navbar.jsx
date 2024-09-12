@@ -18,6 +18,7 @@ const Navbar = () =>{
 
             <div >
                 <h1>100xDevs</h1>
+                
             </div>
 
             <div>

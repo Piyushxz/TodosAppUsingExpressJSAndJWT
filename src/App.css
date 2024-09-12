@@ -10,6 +10,34 @@
   color: red; /* Corrected from font-color to color */
   display:block;
 }
+.header-container {
+  display: flex;
+  justify-content: space-between; /* Distributes space between items */
+  align-items: center; /* Aligns items vertically */
+  margin-bottom: 20px; /* Optional: Adds space below the header */
+}
+
+.todo{
+  display:flex;
+  justify-content:center;
+}
+.todo-h1 {
+  margin-right:700px;
+}
+.add{
+  margin-left:20px;
+  margin-top:18px;
+  height:40px;
+}
+.todo-h2{
+  margin-right:900px;
+  font-size:3rem;
+}
+
+.btn-3 {
+  margin: 0; /* Reset margin to align with .todo-h1 */
+}
+
 
 .btn-2 {
   margin: 20px;
