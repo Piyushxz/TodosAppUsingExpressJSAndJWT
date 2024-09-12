@@ -15,10 +15,12 @@ const SignUp = () =>{
 
     const handleSignIn =  async (e) =>{
         e.preventDefault()
-
+        console.log(username,password)
         try{
             const respone = await axios.post("http://localhost:3006/signup",{username,password})
             console.log(respone)
+            setUsername('');
+            setPassword('')
         }catch(err){
             console.log(err)
         }
@@ -32,9 +34,11 @@ const SignUp = () =>{
                 </div>
                 
             <div className="inp-container">
-                <input onChange ={handleUsernameChange}className="inp" type="text" placeholder="username"/>
+                <input value={username} onChange ={handleUsernameChange}className="inp" type="text" placeholder="username"/>
 
-                <input onChange={handlePasswordChange} className="inp" type = "text" placeholder="password"/>
+                <input value={password
+                    
+                }onChange={handlePasswordChange} className="inp" type = "text" placeholder="password"/>
 
             </div>
 
