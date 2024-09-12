@@ -1,5 +1,6 @@
 const express = require("express")
 const jwt = require("jsonwebtoken")
+const { v4: uuidv4 } = require("uuid") 
 const JWT_SECRET = "iloveyou"
 const app = express()
 const PORT = 3006;
@@ -81,15 +82,18 @@ app.post("/todos",(req,res)=>{
         const todo = req.body.todo
         const decodedUsername = jwt.verify(token,JWT_SECRET)
 
-        let foundUser = null;
+        
 
-        foundUser = users.find(user => user.username === decodedUsername.username)
+        let foundIndex = users.findIndex(user => user.username === decodedUsername.username)
 
-        if(foundUser){
-            foundUser = {...foundUser,todos:[...foundUser.todos,todo]}
+        if(foundIndex !== -1){
+            users[foundIndex].todos.push({id:uuidv4(),todo:todo})
+           
+            
         }
 
-        res.json({message:`${todo} added to User ${foundUser.username}`})
+        res.json({todos:users[foundIndex].todos,message:`${todo} added to User ${users[foundIndex].username}`})
+        console.log(users[foundIndex].todos)
     }catch(err){
         res.json({message:"Could not add todo", error:err})
     }
@@ -101,15 +105,16 @@ app.delete("/todos",(req,res)=>{
         const todoId = req.body.id;
         const decodedUsername = jwt.verify(token,JWT_SECRET)
 
-        let foundUser = null;
+        
 
-        foundUser = users.find(user => user.username === decodedUsername.username)
+        let foundIndex = users.findIndex(user => user.username === decodedUsername.username)
 
-        if(foundUser){
-            foundUser.todos = foundUser.todos.filter(todo => todo.id !== todoId)
+        if(foundIndex!==-1){
+            users[foundIndex].todos = users[foundIndex].todos.filter(todo => todo.id !== todoId)
         }
 
-        res.json({message:`todo with${id} removed`})
+        res.json({todos:users[foundIndex].todos,message:`todo with${todoId} removed`})
+        console.log(users[foundIndex].todos)
       
 
     }catch(err){
