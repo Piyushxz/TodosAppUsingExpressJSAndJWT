@@ -1,4 +1,6 @@
+
 const express = require("express")
+const cors = require("cors")
 const jwt = require("jsonwebtoken")
 const { v4: uuidv4 } = require("uuid") 
 const JWT_SECRET = "iloveyou"
@@ -17,20 +19,44 @@ let users =[{
 }]
 
 
+
 app.use(express.json())
+app.use(cors())
+function auth(req,res,next){
+    let token = req.headers.token;
+
+    decodedUsername = jwt.verify(token,JWT_SECRET)
+    if(decodedUsername.username){
+        req.username = decodedUsername.username
+        next()
+    }else{
+        res.json({message:"Not logged In"})
+    }
+
+}
 app.post("/signup",(req,res)=>{
     try{
         const username = req.body.username;
         const password = req.body.password;
-    
-    
-        users = [...users,{username,password,todos:[]}];
+        
+        let foundUser = null;
 
-        res.json({message:"Successfully added user"})
+        foundUser = users.find(user => user.username === username)
+
+        if(foundUser){
+            return res.status(409).json({ message: "User already exists" });
+        }
+        
+        else{
+            users = [...users,{username,password,todos:[]}];
+
+            res.json({message:"Successfully added user"})
+        }
+
     }
     catch(err){
-        res.json({message:"Failed to add user", error:err})
-    }
+        res.status(500).json({ message: "Failed to add user", error: err.message });   
+     }
 
     console.log(users)
 })
@@ -45,10 +71,10 @@ app.post("/signin",(req,res)=>{
 
         if(foundUser){
             let token = jwt.sign({username:username},JWT_SECRET)
-            res.json({token:token,message:"Signed In"})
+            res.status(200).json({token:token,message:"Signed In"})
         }
         else{
-            res.json({message:"Coudnt sign in"})
+            res.status(404).json({message:"Coudnt sign in"})
         }
     }catch(err){
         res.json({message:"Coudnt sign in",error:err})
@@ -56,15 +82,13 @@ app.post("/signin",(req,res)=>{
 })
 
 
-app.get("/todos",(req,res)=>{
+app.get("/todos",auth, (req,res)=>{
     try{
-        const token = req.headers.token;
 
-        const decodedUsername = jwt.verify(token,JWT_SECRET)
 
         let foundUser = null;
 
-        foundUser = users.find(user => user.username === decodedUsername.username)
+        foundUser = users.find(user => user.username === req.username)
 
         if(foundUser){
             res.json({username:foundUser.username ,todos:foundUser.todos})
@@ -76,15 +100,15 @@ app.get("/todos",(req,res)=>{
     }
 })
 
-app.post("/todos",(req,res)=>{
+app.post("/todos",auth,(req,res)=>{
     try{
-        const token = req.headers.token;
+       
         const todo = req.body.todo
-        const decodedUsername = jwt.verify(token,JWT_SECRET)
+        
 
         
 
-        let foundIndex = users.findIndex(user => user.username === decodedUsername.username)
+        let foundIndex = users.findIndex(user => user.username === req.username)
 
         if(foundIndex !== -1){
             users[foundIndex].todos.push({id:uuidv4(),todo:todo})
@@ -99,15 +123,15 @@ app.post("/todos",(req,res)=>{
     }
 })
 
-app.delete("/todos",(req,res)=>{
+app.delete("/todos",auth,(req,res)=>{
     try{
-        const token = req.headers.token;
+        
         const todoId = req.body.id;
-        const decodedUsername = jwt.verify(token,JWT_SECRET)
+   
 
         
 
-        let foundIndex = users.findIndex(user => user.username === decodedUsername.username)
+        let foundIndex = users.findIndex(user => user.username === req.username)
 
         if(foundIndex!==-1){
             users[foundIndex].todos = users[foundIndex].todos.filter(todo => todo.id !== todoId)
