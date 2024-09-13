@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -16,10 +18,51 @@
   align-items: center; /* Aligns items vertically */
   margin-bottom: 20px; /* Optional: Adds space below the header */
 }
-
+.h5{
+  margin-right:200px;
+  padding-left:20px;
+}
 .todo{
   display:flex;
   justify-content:center;
+  flex-direction:row;
+}
+.delete{
+  margin-left:325px;
+  margin-top:20px;
+  position:absolute;
+  background-color:black;
+  color:red;
+
+}
+.check{
+  margin-left:260px;
+  margin-top:20px;
+  position:absolute;
+  background-color:black;
+  color:blue;
+}
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.todos{
+  display:flex;
+  margin-top:30px;
+  margin-left:400px;
+  background-color:white;
+  width:400px;
+  border-radius:10px;
+
+}
+.todo-container{
+  display:flex;
+  justify-content:center;
+  flex-direction:column;
+  
+
+
 }
 .todo-h1 {
   margin-right:700px;
@@ -29,13 +72,18 @@
   margin-top:18px;
   height:40px;
 }
+.logout{
+  margin-top:20px;
+  color:red;
+}
 .todo-h2{
   margin-right:900px;
   font-size:3rem;
 }
 
 .btn-3 {
-  margin: 0; /* Reset margin to align with .todo-h1 */
+  display:flex;
+  flex-direction:row;
 }
 
 

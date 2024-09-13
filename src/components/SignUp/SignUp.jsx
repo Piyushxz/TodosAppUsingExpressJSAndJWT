@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
+import { useModal } from "../../context/modal-context";
 
 const SignUp = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [userAlreadyFound, setUserAlreadyFound] = useState(false);
-
+    const {isSignInModalOpen,modalDispatch} = useModal()
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
     };
@@ -27,6 +28,10 @@ const SignUp = () => {
                 setUsername('');
                 setPassword('');
                 setUserAlreadyFound(false);
+
+                modalDispatch({
+                    type:"OPEN_SIGNIN_MODAL"
+                })
             }
         } catch (err) {
             console.error('Error:', err);
