@@ -19,7 +19,7 @@ const SignUp = () => {
         e.preventDefault();
         console.log(username, password);
         try {
-            const response = await axios.post("http://localhost:3006/signup", { username, password });
+            const response = await axios.post("https://todoappbackend-qqai.onrender.com/signup", { username, password });
             console.log(response);
             if (response.status === 409) {
                 console.log("User already found");
