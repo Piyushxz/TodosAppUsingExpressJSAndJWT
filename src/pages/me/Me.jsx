@@ -13,7 +13,7 @@ const Me = () => {
     useEffect(() => {
         (async () => {
             try {
-                const response = await axios.get("http://localhost:3006/todos", {
+                const response = await axios.get("https://todoappbackend-qqai.onrender.com/todos", {
                     headers: {
                         token: token
                     }
@@ -33,7 +33,7 @@ const Me = () => {
 
     const handleAddTodo = async () => {
         try {
-            const response = await axios.post("http://localhost:3006/todos", { todo }, {
+            const response = await axios.post("https://todoappbackend-qqai.onrender.com/todos", { todo }, {
                 headers: {
                     token: token
                 }
@@ -48,7 +48,7 @@ const Me = () => {
 
     const handleDeleteTodo = async (id) => {
         try {
-            const response = await axios.delete("http://localhost:3006/todos", {
+            const response = await axios.delete("https://todoappbackend-qqai.onrender.com/todos", {
                 data: { id },
                 headers: {
                     token: token
