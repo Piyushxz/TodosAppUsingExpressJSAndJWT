@@ -13,27 +13,27 @@ const Me = () => {
     useEffect(() => {
         (async () => {
             try {
-                const response = await axios.get("https://todoappbackend-qqai.onrender.com/todos", {
+                const response = await axios.get("http://localhost:3006/todos", {
                     headers: {
                         token: token
                     }
                 });
-                console.log(response.data.todos);
+                console.log(response);
                 setTodos(response.data.todos);
-                setActiveUser(response.data.username);
+                setActiveUser(response.data.user.username);
             } catch (err) {
                 console.log(err);
             }
         })();
     }, []);
-
+    console.log(todos)
     const handleTodoInputChange = (e) => {
         setTodo(e.target.value);
     };
 
     const handleAddTodo = async () => {
         try {
-            const response = await axios.post("https://todoappbackend-qqai.onrender.com/todos", { todo }, {
+            const response = await axios.post("http://localhost:3006/todos", { todo }, {
                 headers: {
                     token: token
                 }
@@ -48,7 +48,7 @@ const Me = () => {
 
     const handleDeleteTodo = async (id) => {
         try {
-            const response = await axios.delete("https://todoappbackend-qqai.onrender.com/todos", {
+            const response = await axios.delete("http://localhost:3006/todos", {
                 data: { id },
                 headers: {
                     token: token
@@ -96,17 +96,17 @@ const Me = () => {
             </div>
 
             <div className="todo-container">
-                {todos.map(({ id, todo }) => (
-                    <div key={id} className="todos">
+                {todos.map(({_id, description }) => (
+                    <div key={_id} className="todos">
                         <h2
-                            className={`h5 ${completedTodos.includes(id) ? "completed" : ""}`}
+                            className={`h5 ${completedTodos.includes(_id) ? "completed" : ""}`}
                         >
-                            {todo}
+                            {description}
                         </h2>
-                        <button onClick={() => handleDeleteTodo(id)} className="delete">
+                        <button onClick={() => handleDeleteTodo(_id)} className="delete">
                             <span className="material-symbols-outlined">delete</span>
                         </button>
-                        <button onClick={() => handleToggleComplete(id)} className="check">
+                        <button onClick={() => handleToggleComplete(_id)} className="check">
                             <span className="material-symbols-outlined">check_circle</span>
                         </button>
                     </div>

@@ -5,6 +5,7 @@ import { useModal } from "../../context/modal-context";
 const SignUp = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
     const [userAlreadyFound, setUserAlreadyFound] = useState(false);
     const {isSignInModalOpen,modalDispatch} = useModal()
     const handleUsernameChange = (e) => {
@@ -15,16 +16,22 @@ const SignUp = () => {
         setPassword(e.target.value);
     };
 
+    const handleEmailChange = (e) =>{
+        setEmail(e.target.value);
+    }
+
     const handleSignIn = async (e) => {
         e.preventDefault();
         console.log(username, password);
         try {
-            const response = await axios.post("https://todoappbackend-qqai.onrender.com/signup", { username, password });
+            const response = await axios.post("http://localhost:3006/signup", { email,username, password });
             console.log(response);
             if (response.status === 409) {
                 console.log("User already found");
                 setUserAlreadyFound(true);
+                return;
             } else {
+                setEmail('');
                 setUsername('');
                 setPassword('');
                 setUserAlreadyFound(false);
@@ -50,6 +57,14 @@ const SignUp = () => {
                     </div>
 
                     <div className="inp-container">
+                    <input 
+                            value={email} 
+                            onChange={handleEmailChange}
+                            className="inp" 
+                            type="email" 
+                            placeholder="Enter email"
+                        />
+
                         <input 
                             value={username} 
                             onChange={handleUsernameChange}
@@ -57,6 +72,7 @@ const SignUp = () => {
                             type="text" 
                             placeholder="Username"
                         />
+
                         <input 
                             value={password}
                             onChange={handlePasswordChange} 

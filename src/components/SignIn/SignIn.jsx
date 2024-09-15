@@ -2,11 +2,11 @@ import axios from "axios";
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 const SignIn = () =>{
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate()
-    const handleUsernameChange = (e) => {
-        setUsername(e.target.value);
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
     };
 
     const handlePasswordChange = (e) => {
@@ -18,13 +18,13 @@ const SignIn = () =>{
 
 
         try{
-            const response = await axios.post("https://todoappbackend-qqai.onrender.com/signin",{username,password})
+            const response = await axios.post("http://localhost:3006/signin",{email,password})
             console.log(response)
             if(response.status === 200){
                 const token = response.data.token
                 localStorage.setItem("token",token)
                 navigate('/todos')
-                setUsername('')
+                setEmail('')
                 setPassword('')
             }
             else{
@@ -45,7 +45,7 @@ const SignIn = () =>{
                 </div>
                 
             <div className="inp-container">
-                <input onChange={handleUsernameChange}className="inp" type="text" placeholder="username"/>
+                <input onChange={handleEmailChange}className="inp" type="email" placeholder="email"/>
 
                 <input onChange={handlePasswordChange} className="inp" type = "password" placeholder="password"/>
 
