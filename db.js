@@ -21,4 +21,8 @@ const Todos = new Schema({
 const UserModel = mongoose.model("Users",Users)
 const TodoModel = mongoose.model("Todos",Todos)
 
+<<<<<<< HEAD
 module.exports ={UserModel,TodoModel}
+=======
+module.exports ={UserModel,TodoModel}
+>>>>>>> 3b21e301fa7e1f80ff499f567e1e9de9add040c7
