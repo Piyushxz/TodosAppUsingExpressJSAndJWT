@@ -110,7 +110,7 @@ const Me = () => {
                             <span className="material-symbols-outlined">check_circle</span>
                         </button>
                     </div>
-                ))}
+                ))}-
             </div>
         </>
     );
