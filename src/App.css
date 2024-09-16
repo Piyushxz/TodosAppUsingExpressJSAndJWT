@@ -12,6 +12,11 @@
   color: red; /* Corrected from font-color to color */
   display:block;
 }
+.err-contain{
+  height:100px;
+  width:200px;
+  margin-left:50px;
+}
 .header-container {
   display: flex;
   justify-content: space-between; /* Distributes space between items */

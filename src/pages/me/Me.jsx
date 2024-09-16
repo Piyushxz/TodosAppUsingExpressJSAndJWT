@@ -20,12 +20,17 @@ const Me = () => {
                 });
                 console.log(response);
                 setTodos(response.data.todos);
-                setActiveUser(response.data.user.username);
+                if (response.data.user) {
+                    setActiveUser(response.data.user.username);
+                } else {
+                    console.error("User data is not available.");
+                }
             } catch (err) {
                 console.log(err);
             }
         })();
     }, []);
+    
     console.log(todos)
     const handleTodoInputChange = (e) => {
         setTodo(e.target.value);

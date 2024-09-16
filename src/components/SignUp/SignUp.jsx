@@ -6,8 +6,9 @@ const SignUp = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [userAlreadyFound, setUserAlreadyFound] = useState(false);
-    const {isSignInModalOpen,modalDispatch} = useModal()
+    const [errorMessage, setErrorMessage] = useState('');
+    const { isSignInModalOpen, modalDispatch } = useModal();
+
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
     };
@@ -16,34 +17,36 @@ const SignUp = () => {
         setPassword(e.target.value);
     };
 
-    const handleEmailChange = (e) =>{
+    const handleEmailChange = (e) => {
         setEmail(e.target.value);
-    }
+    };
 
     const handleSignIn = async (e) => {
         e.preventDefault();
         console.log(username, password);
         try {
-            const response = await axios.post("https://todoappbackend-qqai.onrender.com/signup", { email,username, password });
+            const response = await axios.post("https://todoappbackend-qqai.onrender.com/signup", { email, username, password });
             console.log(response);
-            if (response.status === 409) {
-                console.log("User already found");
-                setUserAlreadyFound(true);
-                return;
-            } else {
-                setEmail('');
-                setUsername('');
-                setPassword('');
-                setUserAlreadyFound(false);
 
-                modalDispatch({
-                    type:"OPEN_SIGNIN_MODAL"
-                })
-            }
+            setEmail('');
+            setUsername('');
+            setPassword('');
+
+            modalDispatch({
+                type: "OPEN_SIGNIN_MODAL"
+            });
         } catch (err) {
             console.error('Error:', err);
-            if (err.response && err.response.status === 409) {
-                setUserAlreadyFound(true);
+            if (err.response) {
+                if (err.response.status === 409) {
+                    setErrorMessage('User already exists.');
+                } else if (err.response.status === 400) {
+                    setErrorMessage('Invalid format Password, must contain lowercase,uppercase,number and special character');
+                } else {
+                    setErrorMessage('Something went wrong. Please try again later.');
+                }
+            } else {
+                setErrorMessage('Network error. Please check your connection.');
             }
         }
     };
@@ -57,7 +60,7 @@ const SignUp = () => {
                     </div>
 
                     <div className="inp-container">
-                    <input 
+                        <input 
                             value={email} 
                             onChange={handleEmailChange}
                             className="inp" 
@@ -82,8 +85,8 @@ const SignUp = () => {
                         />
                     </div>
 
-                    <div>
-                        {userAlreadyFound && <span className="error">User already exists</span>}
+                    <div className="err-contain">
+                        {errorMessage && <span className="error">{errorMessage}</span>}
                     </div>
 
                     <button className="btn">Submit</button>
