@@ -66,12 +66,28 @@ const Me = () => {
         }
     };
 
-    const handleToggleComplete = (id) => {
-        setCompletedTodos((prevCompleted) =>
-            prevCompleted.includes(id)
-                ? prevCompleted.filter(todoId => todoId !== id)
-                : [...prevCompleted, id]
-        );
+    const handleToggleComplete = async (id) => {
+
+
+        try{
+
+            const response = await axios.patch('https://todoappbackend-qqai.onrender.com/todos',{id},{
+                headers:{
+                    token:token
+                }
+            })
+
+            setCompletedTodos((prevCompleted) =>
+                prevCompleted.includes(id)
+                    ? prevCompleted.filter(todoId => todoId !== id)
+                    : [...prevCompleted, id]
+            );
+        }catch(e){
+
+            console.log("Patch req failed",e)
+        }
+
+
     };
 
     const handleLogoutClick = () => {

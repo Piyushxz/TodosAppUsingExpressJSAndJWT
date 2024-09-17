@@ -4,8 +4,9 @@ const mongoose = require("mongoose")
 const { UserModel, TodoModel } = require("./db.js");
 const cors = require("cors")
 const jwt = require("jsonwebtoken")
-const { v4: uuidv4 } = require("uuid") 
+const bcrypt = require('bcryptjs')
 const JWT_SECRET = "iloveyou"
+const {z} = require("zod")
 const app = express()
 const PORT = 3006;
 
@@ -47,11 +48,30 @@ function auth(req,res,next){
 
 }
 app.post("/signup",async (req,res)=>{
+
+
     try{
-        const email = req.body.email
-        const username = req.body.username;
-        const password = req.body.password;
+        const requiredBody = z.object({
+            email:z.string().min(11).max(50).email(),
+            username:z.string().min(3).max(50),
+            password:z.string().min(3).max(50)        
+                            .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+                            .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+                            .regex(/[0-9]/, "Password must contain at least one number")
+                            .regex(/[\W_]/, "Password must contain at least one special character")
+        })
+    
+        const parsedData = requiredBody.safeParse(req.body)
+    
+        if(!parsedData.success){
+            res.status(400).json({message:"Invalid format",error:parsedData.error})
+            return
+        }
+        const email = parsedData.data.email
+        const username = parsedData.data.username;
+        const password = parsedData.data.password;
         
+        const hashedPassword = await  bcrypt.hash(password,5)
         let foundUser = null;
 
         // foundUser = users.find(user => user.username === username)
@@ -70,10 +90,10 @@ app.post("/signup",async (req,res)=>{
             await UserModel.create({
                 email,
                 username,
-                password
+                password:hashedPassword
             })
 
-            res.json({message:"Successfully added user"})
+            res.status(201).json({message:"Successfully added user"})
         }
 
     }
@@ -93,15 +113,22 @@ app.post("/signin", async (req,res)=>{
         // foundUser = users.find(user => user.username === username && user.password === password)
         foundUser = await UserModel.findOne({
             email:email,
-            password:password
         })
         console.log(foundUser)
-        if(foundUser){
+
+
+        if (!foundUser) {
+            return res.status(404).json({ message: "Invalid credentials" });
+        }
+
+
+        const passwordMatch = await bcrypt.compare(password,foundUser.password)
+        if(passwordMatch){
             let token = jwt.sign({id:foundUser._id.toString()},JWT_SECRET)
             res.status(200).json({token:token,message:"Signed In"})
         }
         else{
-            res.status(404).json({message:"Coudnt sign in"})
+            res.status(404).json({message:"Invalid Credentials"})
         }
     }catch(err){
         res.json({message:"Coudnt sign in",error:err})
@@ -130,9 +157,7 @@ app.get("/todos",auth, async (req,res)=>{
                 userId:req.userId
             })
 
-            const user = await UserModel.findOne({
-                _id: req.userId.username// Correctly use _id to find the user
-            });
+            const user = await UserModel.findById(req.userId)
             
 
             res.json({todos,user})
@@ -200,6 +225,31 @@ app.delete("/todos",auth,async (req,res)=>{
 
     }catch(err){
         res.json({message:"Codunt delete todo"})
+    }
+})
+app.patch("/todos",auth,async (req,res)=>{
+    const id = req.body.id;
+
+
+    try{
+        const todo = await TodoModel.findById(id)
+
+        if(!todo){
+             return res.status(404).json({message:"Todo Not Found"})
+        }
+
+
+
+        const completeTodo = await TodoModel.updateOne(
+            {_id:id},
+            {$set : {isCompleted : !todo.isCompleted}}
+
+            
+        )
+
+        res.status(200).json({message:"Todo updated"})
+    }catch(err){
+        res.status(409).json({message : "Todo update failed",error:err})
     }
 })
 app.listen(PORT , ()=>{

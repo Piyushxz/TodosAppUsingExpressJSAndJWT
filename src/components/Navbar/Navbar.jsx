@@ -20,6 +20,7 @@ const Navbar = () =>{
                 <h1>100xDevs</h1>
                 
             </div>
+            
 
             <div>
                 <button className="btn-2" onClick={handleSignInClick}>SignIn</button>
