@@ -3,7 +3,8 @@ import { modalReducer } from "../reducer/modalReducer";
 
 const initialValue = {
     isSignUpModalOpen:true,
-    isSignInModalOpen:false
+    isSignInModalOpen:false,
+    isSignUpSuccessfull:false
 }
 
 const ModalContext = createContext(initialValue)
@@ -11,10 +12,10 @@ const ModalContext = createContext(initialValue)
 
 const ModalProvider = ({children}) =>{
 
-    const [{isSignInModalOpen,isSignUpModalOpen},modalDispatch] = useReducer(modalReducer,initialValue)
+    const [{isSignInModalOpen,isSignUpModalOpen,isSignUpSuccessfull},modalDispatch] = useReducer(modalReducer,initialValue)
 
     return(
-        <ModalContext.Provider value={{isSignInModalOpen,isSignUpModalOpen,modalDispatch}}>
+        <ModalContext.Provider value={{isSignInModalOpen,isSignUpModalOpen,isSignUpSuccessfull,modalDispatch}}>
             {children}
         </ModalContext.Provider>
     )

@@ -12,6 +12,12 @@ export const modalReducer = (state, { type, payload }) => {
           isSignUpModalOpen : true,
           isSignInModalOpen:false 
         };
+
+      case "OPEN_SUCCESS_MODAL":
+        return{
+          ...state,
+          isSignUpSuccessfull:!state.isSignUpSuccessfull
+        }
       default:
         return state;
     }

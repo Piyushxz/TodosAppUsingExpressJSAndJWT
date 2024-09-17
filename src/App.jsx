@@ -6,9 +6,10 @@ import Navbar from './components/Navbar/Navbar'
 import { useModal } from './context/modal-context'
 import SignUp from './components/SignUp/SignUp'
 import Me from './pages/me/Me'
+import Modal from './components/Modal/Modal'
 function App() {
 
-  const {isSignInModalOpen,isSignUpModalOpen} = useModal()
+  const {isSignInModalOpen,isSignUpSuccessfull,isSignUpModalOpen} = useModal()
 
   const location = useLocation()
   
@@ -27,6 +28,10 @@ function App() {
         </>
       )}
 
+    {
+      isSignUpSuccessfull && <Modal/>
+    }
+    
     </>
   )
 }

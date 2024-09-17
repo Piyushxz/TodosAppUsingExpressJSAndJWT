@@ -1,3 +1,4 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0");
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
 #root {
@@ -5,6 +6,27 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+}
+
+.modal-box {
+  position: fixed;
+  font-size: 2rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  padding: 20px;
+  background-color: green;
+  color: white;
+  border-radius: 10px;
+  z-index: 1000;
+  text-align: center;
+  opacity: 1; /* Initial state */
+  transition: opacity 1s ease-in-out; /* Smooth transition for opacity */
+}
+/* Fading out state */
+.fade-out {
+  opacity: 0; /* Faded-out state */
 }
 
 .error {
@@ -160,3 +182,5 @@
 .read-the-docs {
   color: #888;
 }
+
+

@@ -33,8 +33,23 @@ const SignUp = () => {
             setPassword('');
 
             modalDispatch({
-                type: "OPEN_SIGNIN_MODAL"
-            });
+                type:"OPEN_SUCCESS_MODAL"
+            })
+
+            setTimeout(()=>{
+                modalDispatch({
+                    type:"OPEN_SUCCESS_MODAL"
+                })
+
+                modalDispatch({
+                    type: "OPEN_SIGNIN_MODAL"
+                });
+
+            }
+        ,1000)
+
+
+
         } catch (err) {
             console.error('Error:', err);
             if (err.response) {
