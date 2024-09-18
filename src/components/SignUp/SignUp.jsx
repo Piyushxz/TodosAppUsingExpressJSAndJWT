@@ -27,44 +27,42 @@ const SignUp = () => {
         try {
             const response = await axios.post("https://todoappbackend-qqai.onrender.com/signup", { email, username, password });
             console.log(response);
-
+    
             setEmail('');
             setUsername('');
             setPassword('');
-
+    
             modalDispatch({
-                type:"OPEN_SUCCESS_MODAL"
-            })
-
-            setTimeout(()=>{
+                type: "OPEN_SUCCESS_MODAL"
+            });
+    
+            setTimeout(() => {
                 modalDispatch({
-                    type:"OPEN_SUCCESS_MODAL"
-                })
-
+                    type: "OPEN_SUCCESS_MODAL"
+                });
+    
                 modalDispatch({
                     type: "OPEN_SIGNIN_MODAL"
                 });
-
-            }
-        ,1000)
-
-
-
+            }, 1000);
         } catch (err) {
             console.error('Error:', err);
             if (err.response) {
                 if (err.response.status === 409) {
                     setErrorMessage('User already exists.');
                 } else if (err.response.status === 400) {
-                    setErrorMessage('Invalid format Password, must contain lowercase,uppercase,number and special character');
+                    setErrorMessage('Invalid password format. Must contain lowercase, uppercase, number, and special character.');
                 } else {
                     setErrorMessage('Something went wrong. Please try again later.');
                 }
             } else {
                 setErrorMessage('Network error. Please check your connection.');
             }
+            
+            console.log('Error message set:', errorMessage);
         }
     };
+    
 
     return (
         <>
